@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Downloaded dataset and cached tensors (large; re-created by prepare_data.py)
+data/*
+!data/splits.json
+
+# Model weights (re-created by the training scripts)
+checkpoints/
