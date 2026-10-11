@@ -153,8 +153,8 @@ def run_experiment(name, model, loaders, classes, optimizer, epochs, device,
                    scheduler=None, input_size=64, extra=None):
     """Train + test one model and store everything needed for the report.
 
-    Writes results/<name>.json, checkpoints/<name>.pt, figures/<name>_loss.png
-    and figures/<name>_confusion.png.
+    Leaves behind (under outputs/): results/<name>.json, checkpoints/<name>.pt,
+    figures/<name>_loss.png and figures/<name>_confusion.png.
     """
     hist = fit(model, loaders, optimizer, epochs, device, scheduler, tag=name)
     metrics = test_metrics(model, loaders["test"], device, classes)
