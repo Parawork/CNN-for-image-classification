@@ -1,17 +1,24 @@
-"""Task 3 - Optimizer selection & tuning.
+"""Step 3 - Optimizer study  (assignment Task 3)
 
-Trains the same network from the SAME initial weights with:
-  * Adam at three learning rates (to justify the chosen LR)
-  * plain SGD
-  * SGD with momentum 0.5 / 0.9 / 0.99 (to show the effect of the momentum term)
-and plots training/validation curves for all runs.
+To keep the comparison fair, every run starts from the *same* initial weights
+and sees the mini-batches in the same order - the only thing that changes is
+the optimizer. We try:
+  * Adam at 1e-2 / 1e-3 / 1e-4   -> justifies the learning rate we picked
+  * plain SGD                    -> the baseline the assignment asks for
+  * SGD + momentum 0.5/0.9/0.99  -> shows what the momentum term actually does
 
-    python optimizer_study.py                 # Model B, 20 epochs
-    python optimizer_study.py --model model_a --epochs 25
+Heads-up: that's 7 runs, so this is the slowest step. Grab a coffee.
+
+    python scripts/03_optimizer_study.py                      # Model B, 20 epochs
+    python scripts/03_optimizer_study.py --model model_a --epochs 25
 """
 import argparse
 import copy
 import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np
 

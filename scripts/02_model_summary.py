@@ -1,11 +1,17 @@
-"""Task 2 - Architecture details.
+"""Step 2 - Architecture summary  (assignment Task 2)
 
-Prints a layer-by-layer table (output shape, parameters, MACs) for Model A and
-Model B, checks the totals against the hand calculation in docs/architecture.md
-and asserts the 100k-parameter budget for Model B.
+Prints a layer-by-layer table (output shape, params, MACs) for Model A and
+Model B. We did the parameter counts by hand first (docs/architecture.md) and
+this script double-checks them against PyTorch - if they ever disagree, it stops
+loudly. It also makes sure Model B stays under the 100k-parameter budget.
 
-    python model_summary.py
+    python scripts/02_model_summary.py
 """
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import torch
 import torch.nn as nn
 
