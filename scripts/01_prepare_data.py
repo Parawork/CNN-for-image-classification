@@ -1,14 +1,19 @@
-"""Task 1 - Data preparation.
+"""Step 1 - Data preparation  (assignment Task 1)
 
-Downloads EuroSAT, downsizes to 64x64, creates the fixed 70/15/15 stratified split
-and prints the per-class counts for the report / dataset sheet.
+Run this first. It downloads EuroSAT, caches it at 64x64, fixes the 70/15/15
+split and prints a per-class table - handy for filling in the dataset sheet.
+It also saves one sample image per class so we have something to show in the report.
 
-    python prepare_data.py
+    python scripts/01_prepare_data.py
 """
+import sys
 from collections import Counter
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # so `import src` works from anywhere
 
 from src.data import IMG_SIZE, load_eurosat, make_splits
-from src.utils import FIGURES_DIR, save_json, RESULTS_DIR
+from src.utils import FIGURES_DIR, RESULTS_DIR, save_json
 
 import matplotlib
 
