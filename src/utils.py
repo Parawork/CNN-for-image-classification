@@ -1,4 +1,5 @@
-"""Small helpers: reproducibility, device selection, model complexity, JSON I/O."""
+"""Small helpers we kept reaching for: seeding, picking a device, measuring
+model complexity (params / MACs / size / latency) and JSON in-out."""
 import json
 import os
 import random
@@ -8,11 +9,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-RESULTS_DIR = "results"
-FIGURES_DIR = "figures"
-CKPT_DIR = "checkpoints"
-for _d in (RESULTS_DIR, FIGURES_DIR, CKPT_DIR):
-    os.makedirs(_d, exist_ok=True)
+from .paths import CKPT_DIR, FIGURES_DIR, RESULTS_DIR  # noqa: F401  (re-exported for the scripts)
 
 
 def set_seed(seed=42):
