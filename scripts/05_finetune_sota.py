@@ -1,14 +1,21 @@
-"""Task 5 - Fine-tune two lightweight pre-trained networks on the same splits.
+"""Step 5 - Fine-tune the pre-trained lightweight models  (assignment Task 5)
 
-MobileNetV2 and ShuffleNetV2 (x1.0), ImageNet weights from torchvision.
-Strategy: replace the classifier, then fine-tune the WHOLE network with
-discriminative learning rates - a small LR for the pre-trained backbone (so the
-ImageNet features are adapted, not destroyed) and a 10x larger LR for the new head.
+We picked MobileNetV2 and ShuffleNetV2 (x1.0) - both were designed for phones,
+and both ship with ImageNet weights in torchvision.
 
-    python finetune_sota.py                       # 64x64 input (same as the custom models)
-    python finetune_sota.py --input-size 128      # optional: upsampled input
+How we fine-tune: swap the 1000-class head for a 10-class one, then train the
+whole network with two learning rates - a gentle one for the pretrained
+backbone (we want to nudge those ImageNet features, not wipe them out) and a
+10x bigger one for the brand-new head, which starts from scratch.
+
+    python scripts/05_finetune_sota.py                       # 64x64, same input as our models
+    python scripts/05_finetune_sota.py --input-size 128      # optional experiment: upsampled input
 """
 import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import torch
 

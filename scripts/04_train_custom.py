@@ -1,13 +1,21 @@
-"""Task 4 - Train and evaluate the custom networks (Model A and Model B).
+"""Step 4 - Train our own models  (assignment Task 4)
 
-Both models use the optimizer chosen in optimizer_study.py
-(Adam, lr = 1e-3, cosine LR decay) and identical data / epochs.
+Trains Model A and Model B with the winner from step 3 (Adam, lr 1e-3, with a
+cosine decay so it settles nicely at the end). Same data, same epochs, same
+seed for both - so whatever difference shows up comes from the conv type.
 
-    python train_custom.py               # both models, 30 epochs
-    python train_custom.py --models model_b --epochs 20
+Each model leaves behind its loss curves, confusion matrix, test metrics and
+saved weights (that file's size is our "size on disk").
+
+    python scripts/04_train_custom.py                          # both models, 30 epochs
+    python scripts/04_train_custom.py --models model_b --epochs 20
 """
 import argparse
 import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import torch
 
