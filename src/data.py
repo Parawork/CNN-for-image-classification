@@ -1,17 +1,18 @@
 """
-Data preparation for EN3150 Assignment 03.
+Everything to do with the data.
 
-Dataset : EuroSAT (RGB) - Sentinel-2 satellite land-use / land-cover patches.
-          27,000 images, 10 classes (AnnualCrop, Forest, HerbaceousVegetation,
-          Highway, Industrial, Pasture, PermanentCrop, Residential, River, SeaLake).
-Input   : every image is (re)sized to 64 x 64 x 3 to emulate a low-resolution
-          edge sensor (the assignment allows a maximum of 64 x 64).
-Split   : stratified 70 % train / 15 % validation / 15 % test, fixed seed.
-          The split indices are saved to data/splits.json so that EVERY model
-          (custom and pre-trained) is trained and tested on exactly the same images.
+We went with EuroSAT (RGB): 27,000 Sentinel-2 satellite patches across 10
+land-use classes (AnnualCrop, Forest, HerbaceousVegetation, Highway, Industrial,
+Pasture, PermanentCrop, Residential, River, SeaLake). It suits the "edge sensor"
+story well - think of a small satellite or drone that has to classify what it
+sees on board instead of beaming every image down.
+
+  * Images are kept at 64 x 64 x 3, the largest size the assignment allows.
+  * Split is stratified 70 / 15 / 15 with a fixed seed. The indices are written
+    to data/splits.json the first time, so every model - ours and the
+    pre-trained ones - sees exactly the same train / val / test images.
 """
 import json
-import os
 
 import torch
 from sklearn.model_selection import train_test_split
@@ -19,9 +20,11 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
 from torchvision.transforms import functional as TF
 
-DATA_ROOT = "data"
-CACHE_FILE = os.path.join(DATA_ROOT, "eurosat64.pt")
-SPLIT_FILE = os.path.join(DATA_ROOT, "splits.json")
+from .paths import DATA_DIR
+
+DATA_ROOT = DATA_DIR
+CACHE_FILE = DATA_DIR / "eurosat64.pt"
+SPLIT_FILE = DATA_DIR / "splits.json"
 IMG_SIZE = 64
 SEED = 42
 
@@ -36,12 +39,12 @@ def load_eurosat(root=DATA_ROOT):
 
     Returns (images[N,3,64,64] uint8, labels[N] int64, class_names).
     """
-    if os.path.exists(CACHE_FILE):
+    if CACHE_FILE.exists():
         cache = torch.load(CACHE_FILE)
         return cache["images"], cache["labels"], cache["classes"]
 
-    os.makedirs(root, exist_ok=True)
-    ds = datasets.EuroSAT(root=root, download=True)
+    print("First run: downloading EuroSAT (~90 MB) and caching it at 64x64 - this happens only once.")
+    ds = datasets.EuroSAT(root=str(root), download=True)
     resize = transforms.Resize((IMG_SIZE, IMG_SIZE), antialias=True)
 
     images = torch.empty((len(ds), 3, IMG_SIZE, IMG_SIZE), dtype=torch.uint8)
@@ -57,7 +60,7 @@ def load_eurosat(root=DATA_ROOT):
 
 def make_splits(labels, seed=SEED):
     """Stratified 70/15/15 split. Created once, then re-loaded from disk."""
-    if os.path.exists(SPLIT_FILE):
+    if SPLIT_FILE.exists():
         with open(SPLIT_FILE) as f:
             return json.load(f)
 

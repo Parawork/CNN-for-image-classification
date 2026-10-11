@@ -1,13 +1,18 @@
-"""Tasks 4 & 6 - Comparison tables and trade-off plot.
+"""Step 6 - Put it all side by side  (assignment Tasks 4 & 6)
 
-Reads results/*.json written by train_custom.py and finetune_sota.py, measures
-single-image CPU latency for every trained model, and writes
-results/comparison.md plus figures/accuracy_vs_size.png.
+Collects the results from steps 4 and 5, times how long each model takes to
+classify one image on a single CPU core (our stand-in for a small edge device),
+and writes the comparison tables to outputs/results/comparison.md - ready to
+copy into the report. Also draws the accuracy-vs-size trade-off plot.
 
-    python compare.py
+    python scripts/06_compare.py
 """
 import glob
 import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import matplotlib
 
@@ -39,7 +44,8 @@ def latency(r):
 def main():
     results = load_results()
     if not results:
-        raise SystemExit("No results found - run train_custom.py / finetune_sota.py first.")
+        raise SystemExit("Nothing to compare yet - run steps 04 and 05 first "
+                         "(or just `python run_all.py`).")
     torch.set_num_threads(1)  # single core ~ a small edge CPU, and stable timings
     for r in results.values():
         r["latency_ms"] = latency(r)
