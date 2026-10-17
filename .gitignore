@@ -1,12 +1,33 @@
+# ---- Python ----
 __pycache__/
-*.pyc
-.venv/
-venv/
+*.py[cod]
+*.egg-info/
 .ipynb_checkpoints/
 
-# Downloaded dataset and cached tensors (large; re-created by prepare_data.py)
+# ---- Virtual environments ----
+.venv/
+venv/
+env/
+
+# ---- Editors / OS clutter ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Data ----
+# The dataset (~90 MB download + ~330 MB cache) is rebuilt by scripts/01_prepare_data.py.
+# We DO keep splits.json so anyone can reproduce our exact train/val/test split.
 data/*
 !data/splits.json
 
-# Model weights (re-created by the training scripts)
-checkpoints/
+# ---- Outputs ----
+# Trained weights are rebuilt by the training scripts (and MobileNetV2 alone is ~9 MB).
+# Figures and results stay in git - they are the evidence behind the report.
+outputs/checkpoints/
+
+# ---- Misc ----
+*.log
+*.tmp
+nohup.out
